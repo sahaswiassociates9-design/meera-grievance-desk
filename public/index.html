@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Meera Shantivanam Grievance Desk</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Source+Sans+3:wght@400;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+:root{--bg:#f6f5f1;--surface:#fff;--fg:#1d2420;--muted:#5d6762;--line:#d9ddd8;--accent:#1e5f4b;--accent-fg:#fff;--accent-soft:#e3efe9;--warn:#b7791f;--warn-soft:#fbf1dc;--bad:#b3372c;--bad-soft:#f9e4e1;--good:#2f7a4f;--good-soft:#e0f1e5;--info:#2f5f9e;--info-soft:#e2eaf6;--display:"Archivo",system-ui,sans-serif;--body:"Source Sans 3",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace}
+@media (prefers-color-scheme:dark){:root{--bg:#141a17;--surface:#1d2521;--fg:#eef1ee;--muted:#9aa59f;--line:#33403a;--accent:#5fb893;--accent-fg:#0d1a14;--accent-soft:#22362e;--warn:#e2a63f;--warn-soft:#3a2d14;--bad:#e2695b;--bad-soft:#3d1f1b;--good:#6ccd8f;--good-soft:#1c3425;--info:#7ea8e0;--info-soft:#1d2b40;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.5;padding:0 16px 48px}
+h1,h2{font-family:var(--display);margin:0;line-height:1.15}
+.wrap{max-width:980px;margin:0 auto}
+header{padding:28px 0 20px;border-bottom:3px solid var(--accent)}
+header h1{font-size:clamp(24px,4vw,34px);font-weight:700}
+.eyebrow{font-family:var(--display);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.tabs{display:flex;gap:4px;margin-top:20px;border-bottom:1px solid var(--line)}
+.tab{background:none;border:0;border-bottom:3px solid transparent;margin-bottom:-1px;padding:10px 14px;font:600 15px var(--display);color:var(--muted);cursor:pointer}
+.tab[aria-selected="true"]{color:var(--fg);border-bottom-color:var(--accent)}
+.tab:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+section.panel{padding:24px 0}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field.wide{grid-column:1/-1}
+label{font:600 13px var(--display);color:var(--muted)}
+input,select,textarea{font:16px var(--body);color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:9px 11px;width:100%}
+textarea{min-height:110px;resize:vertical}
+.btn{font:600 15px var(--display);background:var(--accent);color:var(--accent-fg);border:0;border-radius:6px;padding:11px 18px;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+.btn.small{padding:6px 12px;font-size:13px}
+.btn:disabled{opacity:.55;cursor:default}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px}
+.ticket{font-family:var(--mono);font-size:15px;letter-spacing:.02em}
+.pill{display:inline-block;padding:2px 10px;border-radius:999px;font:600 12px var(--display);letter-spacing:.03em;text-transform:uppercase;white-space:nowrap}
+.s-open{background:var(--info-soft);color:var(--info)}
+.s-closed{background:var(--line);color:var(--muted)}
+.p-urgent{background:var(--bad-soft);color:var(--bad)}
+.notice{border-left:4px solid var(--accent);background:var(--accent-soft);padding:12px 14px;border-radius:0 8px 8px 0;margin:14px 0}
+.notice.warn{border-color:var(--warn);background:var(--warn-soft)}
+.muted{color:var(--muted)}.small{font-size:14px}
+.list{display:flex;flex-direction:column;gap:12px;margin-top:16px}
+.tk-head{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:space-between}
+.tk-meta{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:14px;color:var(--muted);margin-top:6px}
+.stats{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));margin-bottom:14px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.stat .n{font:700 28px var(--display);font-variant-numeric:tabular-nums}
+.stat .l{font-size:13px;color:var(--muted)}
+.filters{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin-bottom:4px}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:8px;font:600 14px var(--display);opacity:0;transition:opacity .2s;pointer-events:none;max-width:90vw}
+.toast.show{opacity:1}
+.hidden{display:none!important}
+.err{color:var(--bad);font-weight:600}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="eyebrow">Residents' open-issues register</div>
+  <h1>Meera Shantivanam</h1>
+  <div class="muted small">A public, volunteer-run repository of open issues. Log an issue with your mobile number; close it yourself once it's fixed.</div>
+</header>
+
+<div class="tabs" role="tablist">
+  <button class="tab" role="tab" aria-selected="true" data-tab="raise">Log an issue</button>
+  <button class="tab" role="tab" aria-selected="false" data-tab="board">Open issues</button>
+  <button class="tab" role="tab" aria-selected="false" data-tab="close">Close my ticket</button>
+</div>
+
+<section class="panel" id="panel-raise">
+  <div class="notice warn small"><b>Please note:</b> this is a voluntarily built, resident-run grievance portal. It is not operated by, affiliated with, or endorsed by Meera maintenance or anyone associated with Meera, Kanha, Madhuvanam or Kaivalyadham. Nobody monitors this register or works on the issues; it only records what residents report so that everyone can see what is open.</div>
+  <div class="notice warn small"><b>Before you log here:</b> please report the issue to Meera Management first through their regular channels. Use this portal only if the issue stays unresolved for a long time. This is just a repository of open issues so residents can see what is pending; no active action is taken on anything logged here.</div>
+  <div class="notice small"><b>How it works:</b> anyone with this link can log an issue. Your mobile number is mandatory and is never shown in full on the board (only as 98XXXXXX21). Only the ticket number together with the same mobile number can close a ticket. Each number can log up to 5 tickets a day.</div>
+  <form id="raiseForm" class="card" autocomplete="on">
+    <div class="grid">
+      <div class="field"><label for="f-phase">Phase</label><select id="f-phase" required><option>Phase 1</option><option>Phase 2</option><option>Phase 3</option><option>Phase 4</option></select></div>
+      <div class="field"><label for="f-block">Block number</label><input id="f-block" required placeholder="e.g. 7 or B"></div>
+      <div class="field"><label for="f-flat">Flat number</label><input id="f-flat" required placeholder="e.g. 1204 or G-02"></div>
+      <div class="field"><label for="f-name">Resident name</label><input id="f-name" required></div>
+      <div class="field"><label for="f-phone">Mobile number (required)</label><input id="f-phone" required inputmode="tel" placeholder="10-digit mobile" pattern="[6-9][0-9]{9}"></div>
+      <div class="field"><label for="f-cat">Category</label><select id="f-cat" required></select></div>
+      <div class="field"><label for="f-pri">Priority</label><select id="f-pri"><option value="normal">Normal</option><option value="urgent">Urgent — safety or no supply</option></select></div>
+      <div class="field wide"><label for="f-desc">What is the problem?</label><textarea id="f-desc" required placeholder="Where exactly, since when, and what has already been tried."></textarea></div>
+    </div>
+    <div class="row" style="margin-top:16px">
+      <button class="btn" type="submit" id="submitBtn">Log issue</button>
+      <span class="small" id="formMsg"></span>
+    </div>
+  </form>
+  <div class="card hidden" id="receipt" style="margin-top:16px">
+    <div class="eyebrow">Issue logged</div>
+    <h2 style="font-size:22px;margin-top:4px">Your ticket number is <span class="ticket" id="receiptId"></span></h2>
+    <p class="small muted" style="margin:8px 0 0">Note it down. To close this ticket later you will need this number and the same mobile number.</p>
+  </div>
+</section>
+
+<section class="panel hidden" id="panel-board">
+  <div class="stats" id="stats"></div>
+  <div class="filters">
+    <select id="fl-status"><option value="open">Open only</option><option value="">Open + recently closed</option></select>
+    <select id="fl-phase"><option value="">All phases</option><option>Phase 1</option><option>Phase 2</option><option>Phase 3</option><option>Phase 4</option></select>
+    <select id="fl-cat"><option value="">All categories</option></select>
+    <input id="fl-q" placeholder="Search ticket, block, flat, text">
+  </div>
+  <div class="row small muted"><span id="boardMsg">Loading…</span><button class="btn small ghost" type="button" id="refreshBtn">Refresh</button></div>
+  <div class="list" id="board"></div>
+</section>
+
+<section class="panel hidden" id="panel-close">
+  <div class="notice small">Only the person who logged a ticket can close it: enter the ticket number and the mobile number used when logging it.</div>
+  <form class="card" id="closeForm">
+    <div class="grid">
+      <div class="field"><label for="c-id">Ticket number</label><input id="c-id" required placeholder="GRV-2610-XXXX" style="font-family:var(--mono);text-transform:uppercase"></div>
+      <div class="field"><label for="c-phone">Mobile number used</label><input id="c-phone" required inputmode="tel" pattern="[6-9][0-9]{9}"></div>
+      <div class="field wide"><label for="c-note">Note (optional)</label><input id="c-note" placeholder="e.g. fixed on 14 Oct by the plumber"></div>
+    </div>
+    <div class="row" style="margin-top:14px"><button class="btn" type="submit" id="closeBtn">Close ticket</button><span class="small" id="closeMsg"></span></div>
+  </form>
+</section>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function(){
+const CATS=["Water supply / leakage","Electricity / common lighting","Lift","Security / gate","Housekeeping / garbage","Parking","Facilities (clubhouse, gym, pool, play area)","Noise / nuisance","Maintenance billing","Civil / structural repair","Other"];
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmtDate=ts=>new Date(Number(ts)).toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"});
+const toast=m=>{const t=$("toast");t.textContent=m;t.classList.add("show");clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove("show"),2600)};
+let tickets=[];
+const api=(path,body)=>fetch("/api/"+path,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(body)}).then(r=>r.json());
+
+const catOpts=CATS.map(c=>`<option>${esc(c)}</option>`).join("");$("f-cat").innerHTML=catOpts;$("fl-cat").innerHTML='<option value="">All categories</option>'+catOpts;
+try{const s=JSON.parse(localStorage.getItem("gd-resident")||"null");if(s){$("f-phase").value=s.phase;$("f-block").value=s.block;$("f-flat").value=s.flat;$("f-name").value=s.name;$("f-phone").value=s.phone;$("c-phone").value=s.phone}}catch(e){}
+
+document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>showTab(b.dataset.tab)));
+function showTab(n){document.querySelectorAll(".tab").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.tab===n)));["raise","board","close"].forEach(x=>$("panel-"+x).classList.toggle("hidden",x!==n));if(n==="board"&&!tickets.length)load()}
+
+$("raiseForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const d={phase:$("f-phase").value,block:$("f-block").value.trim(),flat:$("f-flat").value.trim(),name:$("f-name").value.trim(),phone:$("f-phone").value.replace(/\D/g,""),category:$("f-cat").value,priority:$("f-pri").value,desc:$("f-desc").value.trim()};
+  if(!/^[6-9]\d{9}$/.test(d.phone)){$("formMsg").innerHTML='<span class="err">Enter a valid 10-digit Indian mobile number.</span>';return}
+  try{localStorage.setItem("gd-resident",JSON.stringify({phase:d.phase,block:d.block,flat:d.flat,name:d.name,phone:d.phone}))}catch(x){}
+  $("submitBtn").disabled=true;$("formMsg").textContent="Logging…";
+  api("submit",d).then(r=>{
+    $("submitBtn").disabled=false;
+    if(r&&r.ok){$("receiptId").textContent=r.id;$("receipt").classList.remove("hidden");$("f-desc").value="";$("f-pri").value="normal";$("formMsg").textContent="";toast("Ticket "+r.id+" logged");tickets=[]}
+    else $("formMsg").innerHTML='<span class="err">'+esc(r&&r.error||"Couldn't log the issue.")+'</span>';
+  }).catch(()=>{$("submitBtn").disabled=false;$("formMsg").innerHTML='<span class="err">Couldn\'t reach the register. Try again in a moment.</span>'});
+});
+
+function load(){$("boardMsg").textContent="Loading…";fetch("/api/list",{cache:"no-store"}).then(r=>r.json()).then(r=>{tickets=Array.isArray(r)?r:[];$("boardMsg").textContent="Updated "+new Date().toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit"});render()}).catch(()=>{$("boardMsg").textContent="Couldn't load the register."})}
+$("refreshBtn").addEventListener("click",load);
+["fl-status","fl-phase","fl-cat","fl-q"].forEach(id=>$(id).addEventListener("input",render));
+function render(){
+  const open=tickets.filter(t=>t.status==="open");
+  const urg=open.filter(t=>t.priority==="urgent").length;
+  const wk=tickets.filter(t=>t.status==="closed"&&t.closedAt>Date.now()-7*86400000).length;
+  $("stats").innerHTML=[["Open issues",open.length],["Urgent",urg],["Closed this week",wk]].map(([l,n])=>`<div class="stat"><div class="n">${n}</div><div class="l">${l}</div></div>`).join("");
+  const fs=$("fl-status").value,fp=$("fl-phase").value,fc=$("fl-cat").value,q=$("fl-q").value.trim().toLowerCase();
+  const rows=tickets.filter(t=>(!fs||t.status===fs)&&(!fp||t.phase===fp)&&(!fc||t.category===fc)&&(!q||[t.id,t.block,t.flat,t.desc,t.name].join(" ").toLowerCase().includes(q)))
+    .sort((a,b)=>(a.status==="closed")-(b.status==="closed")||(b.priority==="urgent")-(a.priority==="urgent")||b.ts-a.ts);
+  $("board").innerHTML=rows.length?rows.map(t=>`<div class="card">
+    <div class="tk-head"><span class="ticket">${esc(t.id)}</span><span class="row"><span class="pill s-${t.status}">${t.status==="open"?"Open":"Closed"}</span>${t.priority==="urgent"?'<span class="pill p-urgent">Urgent</span>':""}</span></div>
+    <div class="tk-meta"><span>${esc(t.category)}</span><span>${esc(t.phase)} · Block ${esc(t.block)} · Flat ${esc(t.flat)}</span><span>${esc(t.name)} · ${esc(t.phoneMasked)}</span><span>Logged ${fmtDate(t.ts)}</span>${t.closedAt?`<span>Closed ${fmtDate(t.closedAt)}</span>`:""}</div>
+    <p style="margin:10px 0 0;white-space:pre-wrap">${esc(t.desc)}</p>
+    ${t.closeNote?`<p class="small muted" style="margin:8px 0 0"><b>On closing:</b> ${esc(t.closeNote)}</p>`:""}
+  </div>`).join(""):'<div class="muted small">No issues match. If nothing has been logged yet, the register is empty.</div>';
+}
+
+$("closeForm").addEventListener("submit",e=>{
+  e.preventDefault();const id=$("c-id").value.trim().toUpperCase(),ph=$("c-phone").value.replace(/\D/g,""),note=$("c-note").value.trim();
+  $("closeBtn").disabled=true;$("closeMsg").textContent="Closing…";
+  api("close",{id,phone:ph,note}).then(r=>{$("closeBtn").disabled=false;if(r&&r.ok){$("closeMsg").textContent="Ticket "+id+" closed.";toast("Closed "+id);tickets=[];$("c-id").value="";$("c-note").value=""}else $("closeMsg").innerHTML='<span class="err">'+esc(r&&r.error||"Couldn't close the ticket.")+'</span>'})
+  .catch(()=>{$("closeBtn").disabled=false;$("closeMsg").innerHTML='<span class="err">Couldn\'t reach the register. Try again in a moment.</span>'});
+});
+})();
+</script>
+</body>
+</html>
